@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { Link } from "react-router-dom";
+import {Link } from "react-router-dom";
 
 //Если у страницы нет урла, то текст статьи находится под ключем text
 
@@ -18,45 +18,49 @@ class News extends React.Component {
   }
 
   fetchNews = async () =>
-      await fetch("https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty")
+    await fetch("https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty")
       .then(res => res.json())
       .then(async (result) => {
-          const topResults = result.slice(0, 100);
-          this.setState({postsId: topResults});
-          await Promise.all(
-            topResults.map(async (post) => {
-              await fetch(`https://hacker-news.firebaseio.com/v0/item/${post}.json?print=pretty`)
+        const topResults = result.slice(0, 100);
+        this.setState({ postsId: topResults });
+        await Promise.all(
+          topResults.map(async (post) => {
+            await fetch(`https://hacker-news.firebaseio.com/v0/item/${post}.json?print=pretty`)
               .then(res => res.json())
               .then((result) => {
-                  this.setState({ posts: [...this.state.posts, result], loading: true });
-                  console.log('Fetching in progress', post);
-                },     
+                this.setState({ posts: [...this.state.posts, result], loading: true });
+                console.log('Fetching in progress', post);
+              },
                 (error) => {
                   console.log(error)
-                });               
-                return true;
-              })
-            );
-            this.setState({loading: false});
-            console.log('done');
-            console.log(this.state.posts.length)
-          });       
+                });
+            return true;
+          })
+        );
+        this.setState({ loading: false });
+        console.log('done');
+        console.log(this.state.posts.length)
+      });
 
-  componentDidMount() {    
+  componentDidMount() {
     this.fetchNews();
 
-    setInterval(() => {
+    this.timerID = setInterval(() => {
       this.setState({ posts: [] });
       this.fetchNews();
-   }, 1000 * 60);
-  } 
+    }, 1000 * 60);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
 
   handleClick = () => {
     this.setState({ posts: [] });
     this.fetchNews();
   }
 
-  render() { 
+  render() {
     const post = this.state.posts;
 
     function order(a, b) {
@@ -64,19 +68,24 @@ class News extends React.Component {
     }
     const getDate = (ms) => {
       var date = new Date(ms * 1000);
-      return date.toString(); 
+      return date.toString();
     }
 
     const listItems = post.sort(order).map((post) =>
-      <Card className="text-center mb-3" key={post.id} onClick={() =>console.log('so what')}>
+      <Card className="text-center mb-3" key={post.id}>
         <Card.Header>{post.by}</Card.Header>
         <Card.Body>
           <Card.Title>{post.title}</Card.Title>
           <Card.Text>Rating: {post.score}</Card.Text>
-          <Button className="mx-3" variant="primary" href='#' target="_blank" rel="noopener noreferrer">See full text and comments</Button>
+          <Card.Text>Comments: {post.descendants}</Card.Text>
+          <Button className="mx-3" variant="primary">
+            <Link style={{ textDecoration: 'none', color: 'white' }} to={`/news/${post.id}`}>
+              See full text and comments
+            </Link>
+          </Button>
           {post.url !== undefined &&
-          <Button variant="primary" href={post.url} target="_blank" rel="noopener noreferrer">Go to source</Button>
-          }          
+            <Button variant="primary" href={post.url} target="_blank" rel="noopener noreferrer">Go to source</Button>
+          }
         </Card.Body>
         <Card.Footer className="text-muted">{getDate(post.time)}</Card.Footer>
       </Card>
@@ -84,20 +93,20 @@ class News extends React.Component {
 
     var isLoading = this.state.loading;
 
-    return(
-    <div className="d-flex flex-column p-2">
-      <Button className="m-3" variant="outline-primary" size="lg" onClick={this.handleClick}>Update newsfeed</Button>
-      {isLoading === true &&        
-        <div className="p-3">
-          <h3>Loading, please wait</h3>
-        </div>
-      }
-      {isLoading === false &&        
-        <div>{listItems}</div>
-      }
-    </div>   
-    ) 
-  }  
+    return (
+      <div className="d-flex flex-column p-2">
+        <Button disabled={this.state.loading} className="m-3" variant="outline-primary" size="lg" onClick={this.handleClick}>Update newsfeed</Button>
+        {isLoading === true &&
+          <div className="p-3">
+            <h3>Loading, please wait</h3>
+          </div>
+        }
+        {isLoading === false &&
+          <div>{listItems}</div>
+        }
+      </div>
+    )
+  }
 }
 
 export default News;
