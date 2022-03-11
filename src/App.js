@@ -1,16 +1,14 @@
-import React from 'react';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import News from './News';
+import React from "react";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import News from "./News";
 import { Routes, Route } from "react-router-dom";
-import NewsPage from './NewsPage';
+import NewsPage from "./NewsPage";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   render() {
@@ -21,7 +19,7 @@ class App extends React.Component {
           <Route path="news/:id" element={<NewsPage />} />
         </Routes>
       </div>
-    )
+    );
   }
 }
 
