@@ -8,6 +8,7 @@ import CommentTree from "./CommentTree";
 import { decode } from "html-entities";
 import reactStringReplace from "react-string-replace";
 import { Link } from "react-router-dom";
+import moment from 'moment';
 
 class NewsPage extends React.Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class NewsPage extends React.Component {
 
     const getDate = (ms) => {
       var date = new Date(ms * 1000);
-      return date.toString();
+      return moment(date).format('LLL');
     };
 
     return (

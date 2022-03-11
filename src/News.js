@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Link } from "react-router-dom";
+import moment from 'moment';
 
 class News extends React.Component {
   constructor(props) {
@@ -70,9 +71,10 @@ class News extends React.Component {
     function order(a, b) {
       return a.time > b.time ? -1 : a > b ? 1 : 0;
     }
+    
     const getDate = (ms) => {
       var date = new Date(ms * 1000);
-      return date.toString();
+      return moment(date).format('LLL');
     };
 
     const listItems = post.sort(order).map((post) => (

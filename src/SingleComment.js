@@ -5,6 +5,7 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { decode } from "html-entities";
 import reactStringReplace from "react-string-replace";
 import "./Comments.css";
+import moment from 'moment';
 
 export default function SingleComment({ commentID }) {
   const [comment, setComment] = useState({});
@@ -49,6 +50,11 @@ export default function SingleComment({ commentID }) {
     return action;
   };
 
+  const getTime = (ms) => {
+    var date = new Date(ms * 1000);
+    return moment(date).startOf('hour').fromNow();
+  };
+
   return (
     <div className="container">
       <ListGroup className="card">
@@ -61,7 +67,7 @@ export default function SingleComment({ commentID }) {
         >
         <div className="row">
           <div className="col-8 d-flex">
-            <h5>{comment.by}</h5> <span> - {comment.time}</span>
+            <h5>{comment.by}</h5> <span> - {getTime(comment.time)}</span>
           </div>
           <div className="col-4 float-right">
           {comment.kids !== undefined && (
