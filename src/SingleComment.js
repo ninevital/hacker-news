@@ -4,6 +4,7 @@ import { Badge } from "react-bootstrap";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { decode } from "html-entities";
 import reactStringReplace from "react-string-replace";
+import "./Comments.css";
 
 export default function SingleComment({ commentID }) {
   const [comment, setComment] = useState({});
@@ -49,25 +50,39 @@ export default function SingleComment({ commentID }) {
   };
 
   return (
-    <div style={{ marginLeft: "50px", marginTop: "10px" }}>
-      <ListGroup>
+    <div className="container">
+      <ListGroup className="card">
+          <div className="row">
         <ListGroup.Item
+          className="col-md-12"
           key={commentID}
           action={action()}
           onClick={comment.kids ? onClickHandler : undefined}
         >
-          {comment.deleted === undefined &&
-            reactStringReplace(decode(comment.text), "<p>", (match, i) => (
-              <br key={i} />
-            ))}
-          {comment.deleted !== undefined && "COMMENT WAS DELETED"}
-          {comment.dead !== undefined && "[DEAD]"}
+        <div className="row">
+          <div className="col-8 d-flex">
+            <h5>{comment.by}</h5> <span> - {comment.time}</span>
+          </div>
+          <div className="col-4 float-right">
           {comment.kids !== undefined && (
             <Badge className="float-right" bg="primary">
               {comment.kids.length}
             </Badge>
           )}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12 align-left">
+            {comment.deleted === undefined &&
+                reactStringReplace(decode(comment.text), "<p>", (match, i) => (
+                <br key={i} />
+                ))}
+            {comment.deleted !== undefined && "COMMENT WAS DELETED"}
+            {comment.dead !== undefined && "[DEAD]"}
+          </div>
+        </div>
         </ListGroup.Item>
+        </div>
         {showResults ? nestedComments : null}
       </ListGroup>
     </div>

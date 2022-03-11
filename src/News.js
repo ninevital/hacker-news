@@ -87,7 +87,7 @@ class News extends React.Component {
               style={{ textDecoration: "none", color: "white" }}
               to={`/news/${post.id}`}
             >
-              See full text and comments
+              See comments
             </Link>
           </Button>
           {post.url !== undefined && (

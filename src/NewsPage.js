@@ -63,6 +63,7 @@ class NewsPage extends React.Component {
           <Card.Body>
             <Card.Title>{post.title}</Card.Title>
             <Card.Text>Rating: {post.score}</Card.Text>
+            <Card.Text>Comments: {post.descendants}</Card.Text>
             {post.url !== undefined && (
               <Button
                 variant="primary"
