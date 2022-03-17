@@ -66,7 +66,7 @@ class News extends React.Component {
   };
 
   render() {
-    const post = this.state.posts;
+    const posts = this.state.posts;
 
     function order(a, b) {
       return a.time > b.time ? -1 : a > b ? 1 : 0;
@@ -77,7 +77,7 @@ class News extends React.Component {
       return moment(date).format('LLL');
     };
 
-    const listItems = post.sort(order).map((post) => (
+    const listItems = posts.sort(order).map((post) => (
       <Card className="text-center mb-3" key={post.id}>
         <Card.Header>{post.by}</Card.Header>
         <Card.Body>
